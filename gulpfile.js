@@ -97,13 +97,16 @@ function cleanFeature (name) {
   rm.sync(`./features/${name}/favicon.ico`);
   rm.sync(`./features/${name}/polyfills.ts`);
   rm.sync(`./features/${name}/styles.scss`);
-  // rimraf.sync(`./features/${name}/index.html`);
+  rm.sync(`./features/${name}/index.html`);
   rm.sync(`./features/${name}/test.ts`);
+
+  // Moving app to root
+  fse.moveSync(`./features/${name}/app`, `./features/${name}`);
 
   // Editing angular.json paths
   const angularJson = jsonfile.readFileSync(`./angular.json`);
   angularJson.projects[name].sourceRoot = `features/${name}`;
-  angularJson.projects[name].architect.build.options.index = `features/${name}/index.html`;
+  angularJson.projects[name].architect.build.options.index = `features/index.html`;
   angularJson.projects[name].architect.build.options.main = `features/${name}/main.ts`;
   angularJson.projects[name].architect.build.options.polyfills = `features/polyfills.ts`;
   angularJson.projects[name].architect.build.options.tsConfig = 'tsconfig.json';
@@ -127,7 +130,7 @@ function cleanFeature (name) {
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { AppModule } from './app/app.module';
+import { AppModule } from './app.module';
 
 // enableProdMode();
 
